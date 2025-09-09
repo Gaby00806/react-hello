@@ -2,12 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// 🟢 Componentes
+// Componentes
 import Navbar from "./components/Navbar";
 import Dashboard from "./components/Dashboard";
 import Usuarios from "./components/Usuarios";
 
-// 🟣 Pages
+// Pages
 import Home from "./components/Home";
 import Tareas from "./pages/Tareas";
 import ControlDeGastos from "./pages/Gastos";

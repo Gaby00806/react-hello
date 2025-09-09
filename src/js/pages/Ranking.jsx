@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
-  Card,
-  CardContent,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Grid,
+  Container,Card,CardContent,Typography,Table,
+  TableBody,TableCell,TableContainer,TableHead,TableRow,Paper,Grid,
 } from "@mui/material";
 
 const PUNTOS_KEY = "puntosPorUsuario";
@@ -71,7 +61,7 @@ function Ranking() {
       </Typography>
 
       <Grid container spacing={3}>
-        {/* Ranking de puntos */}
+        
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
@@ -102,7 +92,7 @@ function Ranking() {
           </Card>
         </Grid>
 
-        {/* Ranking de ahorro */}
+        
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>

@@ -1,18 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Container,
-  Card,
-  Typography,
-  Button,
-  TextField,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Divider,
-  Select,
-  MenuItem,
+  Container,Card,Typography,Button,TextField,Grid,List,
+  ListItem,ListItemText,IconButton,Divider,Select,MenuItem,Checkbox,FormControlLabel,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -27,13 +16,13 @@ function ControlDeGastos() {
   const [gastos, setGastos] = useState(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      const data = raw ? JSON.parse(raw) : [];
-      return data.filter((g) => g.usuario && g.usuario.trim() !== "");
+      return raw ? JSON.parse(raw) : [];
     } catch {
       return [];
     }
   });
 
+  // Cargar usuarios (objetos con id, nombre, ingresos, meta, etc.)
   const [usuarios, setUsuarios] = useState(() => {
     try {
       const raw = localStorage.getItem(USUARIOS_KEY);
@@ -45,19 +34,23 @@ function ControlDeGastos() {
 
   const [descripcion, setDescripcion] = useState("");
   const [monto, setMonto] = useState("");
-  const [fecha, setFecha] = useState(() => new Date().toISOString().split("T")[0]);
+  const [fecha, setFecha] = useState(() =>
+    new Date().toISOString().split("T")[0]
+  );
   const [usuario, setUsuario] = useState("");
+  const [compartido, setCompartido] = useState(false);
 
   // Guardar gastos en localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(gastos));
   }, [gastos]);
 
-  // ➕ Agregar gasto
+  // Agregar gasto
   const handleAdd = () => {
     const montoNum = parseFloat(monto);
 
-    if (!descripcion.trim() || isNaN(montoNum) || !usuario) {
+    // Si es compartido no exigimos usuario; si es individual, sí.
+    if (!descripcion.trim() || isNaN(montoNum) || (!compartido && !usuario)) {
       alert("Por favor completa todos los campos con valores válidos");
       return;
     }
@@ -69,42 +62,59 @@ function ControlDeGastos() {
         descripcion: descripcion.trim(),
         monto: montoNum,
         fecha,
-        usuario,
+        usuario: compartido ? "COMPARTIDO" : usuario,
+        compartido: !!compartido,
       },
     ]);
+
+    // reset form
     setDescripcion("");
     setMonto("");
     setFecha(new Date().toISOString().split("T")[0]);
     setUsuario("");
+    setCompartido(false);
   };
 
-  // 🗑 Eliminar gasto
+  // Eliminar gasto
   const handleDelete = (id) => {
     setGastos((prev) => prev.filter((g) => g.id !== id));
   };
 
-  // 🔄 Reasignar gasto al arrastrar
+  // Reasignar gasto al arrastrar (al caer en otra columna deja de ser compartido)
   const handleReassign = (gastoId, newUsuario) => {
     setGastos((prev) =>
-      prev.map((g) => (g.id === gastoId ? { ...g, usuario: newUsuario } : g))
+      prev.map((g) =>
+        g.id === gastoId ? { ...g, usuario: newUsuario, compartido: false } : g
+      )
     );
   };
 
-  // 📊 Totales
-  const totalGeneral = gastos.reduce((sum, g) => sum + (g.monto || 0), 0);
-  const cuotaPorUsuario = usuarios.length > 0 ? totalGeneral / usuarios.length : 0;
+  // Separar gastos
+  const gastosCompartidos = gastos.filter((g) => g.compartido);
+  const gastosIndividuales = gastos.filter((g) => !g.compartido);
+
+  // Totales compartidos
+  const totalCompartido = gastosCompartidos.reduce((s, g) => s + (g.monto || 0), 0);
+  const cuotaCompartida =
+    usuarios.length > 0 ? totalCompartido / usuarios.length : 0;
+
+  // Total individual general (suma de todos los individuales)
+  const totalIndividualGeneral = gastosIndividuales.reduce(
+    (s, g) => s + (g.monto || 0),
+    0
+  );
 
   return (
     <Container maxWidth="xl" sx={{ mt: 5 }}>
       <Typography variant="h4" gutterBottom>
-        Control de Gastos Mensuales (Kanban)
+        Control de Gastos Mensuales
       </Typography>
 
       {/* Formulario */}
       <Card sx={{ mb: 3, p: 2 }}>
         <Typography variant="h6">Agregar gasto</Typography>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <TextField
               fullWidth
               label="Descripción"
@@ -112,7 +122,7 @@ function ControlDeGastos() {
               onChange={(e) => setDescripcion(e.target.value)}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={2}>
             <TextField
               fullWidth
               type="number"
@@ -121,7 +131,7 @@ function ControlDeGastos() {
               onChange={(e) => setMonto(e.target.value)}
             />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item xs={6} md={2}>
             <TextField
               fullWidth
               type="date"
@@ -131,23 +141,36 @@ function ControlDeGastos() {
               onChange={(e) => setFecha(e.target.value)}
             />
           </Grid>
-          <Grid item xs={2}>
-            <Select
-              fullWidth
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
-              displayEmpty
-            >
-              <MenuItem value="">Seleccionar usuario</MenuItem>
-              {usuarios.map((u) => (
-                <MenuItem key={u.id} value={u.nombre}>
-                  {u.nombre}
-                </MenuItem>
-              ))}
-            </Select>
+          <Grid item xs={12} md={3}>
+            {!compartido && (
+              <Select
+                fullWidth
+                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
+                displayEmpty
+              >
+                <MenuItem value="">Seleccionar usuario</MenuItem>
+                {usuarios.map((u) => (
+                  <MenuItem key={u.id} value={u.nombre}>
+                    {u.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            )}
+            <FormControlLabel
+              sx={{ mt: 1 }}
+              control={
+                <Checkbox
+                  checked={compartido}
+                  onChange={(e) => setCompartido(e.target.checked)}
+                />
+              }
+              label="Gasto compartido"
+            />
           </Grid>
-          <Grid item xs={1}>
+          <Grid item xs={12} md={2}>
             <Button
+              fullWidth
               variant="contained"
               onClick={handleAdd}
               sx={{ height: "100%" }}
@@ -158,27 +181,29 @@ function ControlDeGastos() {
         </Grid>
       </Card>
 
-      {/* Tablero Kanban */}
+      
       <Grid container spacing={2}>
         {usuarios.map((u) => (
           <Grid item xs={12} sm={6} md={4} key={u.id}>
             <KanbanColumn
               usuario={u.nombre}
-              gastos={gastos.filter((g) => g.usuario === u.nombre)}
+              gastos={gastosIndividuales.filter((g) => g.usuario === u.nombre)}
               onDelete={handleDelete}
               onReassign={handleReassign}
+              cuotaCompartida={cuotaCompartida}
             />
           </Grid>
         ))}
       </Grid>
 
-      {/* Total General */}
+      
       <Card sx={{ mt: 3, p: 2 }}>
-        <Typography variant="h6">Total de la casa</Typography>
-        <Typography>Gasto mensual total: 💸 ${totalGeneral.toFixed(2)}</Typography>
+        <Typography variant="h6">Totales</Typography>
+        <Typography>Gastos individuales: 💸 ${totalIndividualGeneral.toFixed(2)}</Typography>
+        <Typography>Gastos compartidos: 🏠 ${totalCompartido.toFixed(2)}</Typography>
         {usuarios.length > 0 && (
           <Typography>
-            Cada usuario debe aportar: 💵 ${cuotaPorUsuario.toFixed(2)}
+            Cada usuario aporta en compartidos: 💵 ${cuotaCompartida.toFixed(2)}
           </Typography>
         )}
       </Card>
@@ -186,7 +211,7 @@ function ControlDeGastos() {
   );
 }
 
-function KanbanColumn({ usuario, gastos, onDelete, onReassign }) {
+function KanbanColumn({ usuario, gastos, onDelete, onReassign, cuotaCompartida }) {
   const ref = useRef(null);
   const [isOver, setIsOver] = useState(false);
 
@@ -209,7 +234,9 @@ function KanbanColumn({ usuario, gastos, onDelete, onReassign }) {
     };
   }, [usuario, onReassign]);
 
-  const subtotal = gastos.reduce((sum, g) => sum + (g.monto || 0), 0);
+  // Subtotal individual de esta columna
+  const subtotalIndividual = gastos.reduce((s, g) => s + (g.monto || 0), 0);
+  const totalPersonal = subtotalIndividual + (cuotaCompartida || 0);
 
   return (
     <Card
@@ -231,10 +258,16 @@ function KanbanColumn({ usuario, gastos, onDelete, onReassign }) {
           <DraggableGasto key={g.id} gasto={g} onDelete={onDelete} />
         ))}
 
-        <Divider />
+        <Divider sx={{ my: 1 }} />
+        <ListItem>
+          <ListItemText primary={`Subtotal individual: $${subtotalIndividual.toFixed(2)}`} />
+        </ListItem>
+        <ListItem>
+          <ListItemText primary={`Cuota compartida: $${(cuotaCompartida || 0).toFixed(2)}`} />
+        </ListItem>
         <ListItem>
           <ListItemText
-            primary={`Subtotal: $${subtotal.toFixed(2)}`}
+            primary={`Total personal: $${totalPersonal.toFixed(2)}`}
             sx={{ fontWeight: "bold" }}
           />
         </ListItem>

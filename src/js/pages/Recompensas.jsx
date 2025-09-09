@@ -1,25 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {
-  Container,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  Divider,
-  List,
-  ListItem,
-  ListItemText,
-  TextField,
-  IconButton,
-  MenuItem,
+  Container,Grid,Card,CardContent,Typography,Button,Divider,
+  List,ListItem,ListItemText,TextField,IconButton,MenuItem,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 const listaRecompensasFijas = [
-  { id: 1, titulo: "La cuenta porfavor!!! 🍽️", descripcion: "Hoy te invito a cenar", costo: 60 },
-  { id: 2, titulo: "Rey/Reina por un día 👑", descripcion: "Desayuno a la cama y trato real", costo: 80 },
-  { id: 3, titulo: "La carta de la envidia", descripcion: "Intercambio de platos, tu comida tiene mejor pinta", costo: 80 },
+  { id: 1, titulo: "La cuenta porfavor!!! 🍽️", descripcion: "Hoy te invito a cenar", costo: 40 },
+  { id: 2, titulo: "Rey/Reina por un día 👑", descripcion: "Desayuno a la cama y trato real", costo: 60 },
+  { id: 3, titulo: "La carta de la envidia", descripcion: "Intercambio de platos, tu comida tiene mejor pinta", costo: 50 },
   { id: 4, titulo: "Day off 🛌", descripcion: "Te libras de los quehaceres por un día", costo: 100 },
   { id: 5, titulo: "Cuponazo 🎁", descripcion: "Un paseo por el Ikea, ¿qué compramos?", costo: 100 },
 ];

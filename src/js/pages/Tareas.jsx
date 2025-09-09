@@ -1,8 +1,8 @@
 import React from "react";
-import KanbanTareas from "./KanbanTareas"; // 👈 Importa el tablero Kanban
+import KanbanTareas from "./KanbanTareas"; 
 
 function Tareas() {
-  return <KanbanTareas />; // 👈 Renderiza el tablero
+  return <KanbanTareas />; 
 }
 
 export default Tareas;

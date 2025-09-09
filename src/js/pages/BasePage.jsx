@@ -1,18 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Container,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-  TextField,
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Checkbox,
-  MenuItem,
-  Select,
+  Container,Card,CardContent,Typography,Button,TextField,
+  List,ListItem,ListItemText, IconButton,  Checkbox,  MenuItem,  Select,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,6 +10,7 @@ import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
 
 function BasePage({ titulo, storageKey, placeholder, botonTexto, puntosKey }) {
+
   // Items de la página (tareas, compras, gastos, etc.)
   const [items, setItems] = useState(() => {
     try {
@@ -62,7 +52,7 @@ function BasePage({ titulo, storageKey, placeholder, botonTexto, puntosKey }) {
   const [nuevoItem, setNuevoItem] = useState("");
   const [usuario, setUsuario] = useState("");
 
-  // ➕ Agregar item
+  // Agregar item
   const handleAdd = () => {
     if (!nuevoItem.trim() || !usuario) {
       alert("Debes escribir un item y asignar un usuario");
@@ -82,12 +72,12 @@ function BasePage({ titulo, storageKey, placeholder, botonTexto, puntosKey }) {
     setUsuario("");
   };
 
-  // 🗑 Eliminar
+  // Eliminar
   const handleDelete = (id) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // ✏ Editar
+  // Editar
   const handleEdit = (id) => {
     const nuevoTexto = prompt("Editar:");
     if (nuevoTexto && nuevoTexto.trim()) {
@@ -120,7 +110,6 @@ function BasePage({ titulo, storageKey, placeholder, botonTexto, puntosKey }) {
     });
   };
 
-  //  Reordenar con drag-and-drop
   const handleReorder = (sourceId, targetId) => {
     if (sourceId === targetId) return;
     const sourceIndex = items.findIndex((i) => i.id === sourceId);
@@ -147,7 +136,7 @@ function BasePage({ titulo, storageKey, placeholder, botonTexto, puntosKey }) {
             </Typography>
           )}
 
-          {/* Input + Asignar usuario */}
+          
           <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
             <TextField
               fullWidth

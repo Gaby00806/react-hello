@@ -35,7 +35,7 @@ function Navbar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* LOGO DESKTOP */}
+        
           <Typography
             variant="h6"
             noWrap
@@ -89,7 +89,7 @@ function Navbar() {
             </Menu>
           </Box>
 
-          {/* LOGO MOBILE */}
+         
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
             variant="h5"
@@ -110,7 +110,7 @@ function Navbar() {
             MiApp
           </Typography>
 
-          {/* MENU DESKTOP */}
+          
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button
@@ -125,7 +125,6 @@ function Navbar() {
             ))}
           </Box>
 
-          {/* MENU USER */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Abrir opciones">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

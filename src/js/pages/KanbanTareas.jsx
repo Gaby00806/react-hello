@@ -1,16 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Container,
-  Card,
-  Typography,
-  Button,
-  TextField,
-  Grid,
-  List,
-  ListItem,
-  ListItemText,
-  Checkbox,
-  IconButton,
+  Container,Card,Typography,Button,TextField,Grid,
+  List,ListItem,ListItemText,Checkbox,IconButton,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
@@ -21,7 +12,8 @@ import { dropTargetForElements } from "@atlaskit/pragmatic-drag-and-drop/element
 const PUNTOS_KEY = "puntosPorUsuario";
 
 function KanbanTareas() {
-  // 🔹 Usuarios (objetos con id, nombre, correo...)
+
+  // Usuarios (objetos con id, nombre, correo...)
   const [usuarios, setUsuarios] = useState(() => {
     try {
       const raw = localStorage.getItem("usuarios");
@@ -31,7 +23,7 @@ function KanbanTareas() {
     }
   });
 
-  // 🔹 Tareas
+  // Tareas
   const [items, setItems] = useState(() => {
     try {
       const raw = localStorage.getItem("tareas");
@@ -42,7 +34,7 @@ function KanbanTareas() {
   });
   const [nuevoItem, setNuevoItem] = useState("");
 
-  // 🔹 Puntos por usuario
+  // Puntos por usuario
   const [puntos, setPuntos] = useState(() => {
     try {
       const raw = localStorage.getItem(PUNTOS_KEY);
@@ -68,7 +60,7 @@ function KanbanTareas() {
         id: Date.now().toString(),
         texto: nuevoItem.trim(),
         completada: false,
-        usuario: "Sin asignar", // 👈 por defecto
+        usuario: "Sin asignar", 
       },
     ]);
     setNuevoItem("");
@@ -130,7 +122,7 @@ function KanbanTareas() {
         Kanban de Tareas
       </Typography>
 
-      {/* ➕ Nueva tarea */}
+      
       <div style={{ display: "flex", gap: 10, marginBottom: 20 }}>
         <TextField
           fullWidth
@@ -145,9 +137,9 @@ function KanbanTareas() {
         </Button>
       </div>
 
-      {/* 🟦 Tablero Kanban */}
+      
       <Grid container spacing={2}>
-        {/* Columna "Sin asignar" */}
+       
         <Grid item xs={12} sm={6} md={3} key="sin-asignar">
           <KanbanColumn
             usuario="Sin asignar"
@@ -159,7 +151,7 @@ function KanbanTareas() {
           />
         </Grid>
 
-        {/* Columnas por usuario */}
+        
         {usuarios.map((u) => (
           <Grid item xs={12} sm={6} md={3} key={u.id}>
             <KanbanColumn

@@ -43,7 +43,6 @@ const initialSections = [
 function Dashboard() {
   const [sections, setSections] = useState(initialSections);
 
-  // Reordenar array al soltar
   const handleReorder = (sourceId, targetId) => {
     if (sourceId === targetId) return;
 
